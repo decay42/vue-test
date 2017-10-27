@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="icon" v-bind:style="microphoneObject">
-      <i class="fa fa-microphone" v-bind:style="borderObject" aria-hidden="true"></i>
+      <i class="fa" v-bind:class="micIconClass" v-bind:style="borderObject" v-on:click="toggleListening()" aria-hidden="true"></i>
     </div>
     <div id="settings" class="container">
       <h3 v-on:click="testActive()">Settings</h3>
@@ -22,8 +22,11 @@
             </div>
             <div class="form-group row">
               <label class="col-sm-2 col-form-label">Icon Size</label>
-              <div class="col-sm-10">
+              <div class="col-sm-9">
                 <input class="form-control" type="range" min="30" max="200" step="1" v-model="fontSize" v-on:change="saveSetting('fontSize', $event.target.value)" />
+              </div>
+              <div class="col-sm-1">
+                {{ fontSize }} pt
               </div>
             </div>
             <div class="form-group row">
@@ -51,6 +54,7 @@
 </template>
 
 <script>
+import DecibelMeter from 'decibel-meter'
 export default {
   name: 'MainView',
   data () {
@@ -61,7 +65,9 @@ export default {
       fontSize: localStorage.fontSize || '50',
       borderOffset: '10',
       border: false,
-      active: false
+      active: false,
+      activityCutoff: 0.5,
+      meter: null
     }
   },
   computed: {
@@ -72,6 +78,7 @@ export default {
         fontSize: `${this.fontSize}pt`
       }
     },
+
     borderObject: function () {
       return {
         borderWidth: '1px',
@@ -79,22 +86,49 @@ export default {
         borderStyle: this.border ? 'solid' : 'none',
         padding: `${this.borderOffset}px`
       }
+    },
+
+    micIconClass: function () {
+      return {
+        'fa-microphone': this.meter.listening,
+        'fa-microphone-slash': !this.meter.listening
+      }
     }
   },
   created: function () {
     require('../../assets/jscolor.min.js')
+
+    this.meter = new DecibelMeter('unique-id')
+    this.meter.sources.then(sources => {
+      this.meter.connect(sources[0])
+    })
+
+    this.meter.on('sample', this.checkActivity)
   },
   methods: {
-    testActive: function () {
-      this.active = true
-      setTimeout(() => { this.active = false }, 500)
-    },
     saveSetting: function (setting, value) {
       localStorage.setItem(setting, value)
     },
+
     resetSettings: function () {
       localStorage.clear()
       this.$router.go(-1)
+    },
+
+    checkActivity: function (dB, percent, value) {
+      if (value > this.activityCutoff) {
+        this.active = true
+      } else {
+        this.active = false
+      }
+    },
+
+    toggleListening: function () {
+      if (this.meter.listening) {
+        this.meter.stopListening()
+      } else {
+        this.meter.listen()
+      }
     }
   }
 }
@@ -112,6 +146,7 @@ $footer-size: 70px;
       1px -1px 0 #000,
       -1px 1px 0 #000,
       -1px -1px 0 #000;
+    cursor: pointer;
   }
 }
 html {
