@@ -33,18 +33,17 @@ import Settings from './Settings'
 import DecibelMeter from 'decibel-meter'
 
 export default {
-  name: 'MainView',
   data () {
     return {
       settings: {
-        bgColor: localStorage.bgColor || '#00B140',
         activeColor: localStorage.activeColor || '#D11C00',
-        fontSize: localStorage.fontSize || '50',
+        bgColor: localStorage.bgColor || '#00B140',
         border: localStorage.border === 'true',
+        fontSize: localStorage.fontSize || '100',
         threshold: localStorage.threshold || 0.5
       },
-      borderOffset: '10',
       active: false,
+      borderOffset: '10',
       meter: null
     }
   },
@@ -107,38 +106,38 @@ export default {
 </script>
 
 <style scoped lang="sass">
-@import "../assets/text-stroke"
+  @import "../assets/text-stroke"
 
-$footer-size: 70px
+  $footer-size: 70px
 
-#icon
-  text-align: center
-  margin-bottom: 10px
-  i
-    /*text-shadow: 1px 1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, -1px -1px 0 #000*/
-    @include text-stroke(1, #000, 0)
-    cursor: pointer
-
-html
-  position: relative
-  min-height: 100%
-
-body
-  margin-bottom: $footer-size
-
-.footer
-  position: absolute
-  bottom: 0
-  width: 100%
-  height: $footer-size
-  line-height: 15px
-  background-color: #f5f5f5
-  .container
+  #icon
+    text-align: center
+    margin-bottom: 10px
     i
-      margin-top: 8px
-    a, a:link, a:visited
-      text-decoration: none
-      color: #000
-    a:hover
-      color: #004b81
+      /*text-shadow: 1px 1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, -1px -1px 0 #000*/
+      @include text-stroke(1, #000, 0)
+      cursor: pointer
+
+  html
+    position: relative
+    min-height: 100%
+
+  body
+    margin-bottom: $footer-size
+
+  .footer
+    position: absolute
+    bottom: 0
+    width: 100%
+    height: $footer-size
+    line-height: 15px
+    background-color: #f5f5f5
+    .container
+      i
+        margin-top: 8px
+      a, a:link, a:visited
+        text-decoration: none
+        color: #000
+      a:hover
+        color: #004b81
 </style>
