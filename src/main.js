@@ -10,28 +10,10 @@ import 'font-awesome/css/font-awesome.css'
 
 Vue.config.productionTip = false
 
-Vue.use(BootstrapVue)
-
-Vue.component('color-input', {
-  template: `
-    <input
-      class="jscolor { hash: true } form-control"
-      v-bind:value="value"
-      v-on:change="updateValue($event.target.value)">
-  `,
-  props: ['value', 'setting'],
-  methods: {
-    updateValue: function (value) {
-      localStorage.setItem(this.setting, value)
-      this.$emit('input', value)
-    }
-  }
-})
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   template: '<App/>',
-  components: { App }
+  components: { App, BootstrapVue }
 })
